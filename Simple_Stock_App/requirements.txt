@@ -1,3 +1,4 @@
+mercurial==5.6.1
 pandas
-yfinance
 streamlit
+yfinance
