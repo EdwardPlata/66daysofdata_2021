@@ -4,10 +4,10 @@ import pandas as pd
 
 st.write("""
         # Simple Stonk Price App
-        Shown are the stock ** Closing price** and ***Volume*** of Google or other stocks!
+        Shown are the stock ** Closing price** and ***Volume*** of Amazone or other stocks!
         """)
 
-tickerSymbol ='GOOGL'
+tickerSymbol ='AMZN'
 
 tickerData = yf.Ticker(tickerSymbol)
 tickerDf = tickerData.history(period='1d', start = '2010-5-31',end = '2020-5-31')

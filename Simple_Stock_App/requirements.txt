@@ -2,3 +2,9 @@ mercurial==5.6.1
 pandas
 streamlit
 yfinance
+numpy
+datetime
+random
+matplotlib
+cycler
+scipy
