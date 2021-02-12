@@ -1,6 +1,6 @@
 import alpaca_trade_api as tradeapi
-import sqlite3
-connection=sqlite3.connect('/User/anthonyplata/Google\ Drive/Projects/Fullstack_trading_app/app.db')
+import sqlite3,config.py
+connection=sqlite3.connect(config.DB_FILE)
 print("Successfully connected to Database")
 cursor = connection.cursor()
 #----------- Scheduler job-----------
@@ -12,7 +12,7 @@ rows = cursor.fetchall()
 symbols = [row[0] for row in rows] # list comprehension
 #print(symbols)
 # Connecting to alpaca_trade_api
-api = tradeapi.REST('PKHITD3S928PZ8XAHLX6','goptGCIpXs40d5tQtFFp6KO3MXFRnSTv46snc6C8','https://paper-api.alpaca.markets')
+api = tradeapi.REST(config.API_KEY,config.SECRET_KEY,config.BASE_URL)
 
 assets = api.list_assets()
 ##Asset object example

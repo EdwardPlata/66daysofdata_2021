@@ -1,5 +1,5 @@
-import sqlite3
-connection = sqlite3.connect('app.db')
+import sqlite3,config
+connection = sqlite3.connect(config.DB_FILE)
 cursor = connection.cursor()
 # Adjust stock table to have more columns for better EDA
 cursor.execute("""
