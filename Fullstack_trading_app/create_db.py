@@ -1,6 +1,7 @@
 import sqlite3
 connection = sqlite3.connect('app.db')
 cursor = connection.cursor()
+# Adjust stock table to have more columns for better EDA
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS stock (
         id INTEGER PRIMARY KEY,
