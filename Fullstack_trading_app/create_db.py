@@ -1,12 +1,12 @@
-import sqlite3,config
-connection = sqlite3.connect(config.DB_FILE)
+import sqlite3
+connection = sqlite3.connect('app.db')
+
 cursor = connection.cursor()
-# Adjust stock table to have more columns for better EDA
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS stock (
         id INTEGER PRIMARY KEY,
         symbol TEXT NOT NULL UNIQUE,
-        company TEXT NOT NULL
+        name TEXT NOT NULL
     )
 """)
 cursor.execute("""
@@ -18,7 +18,6 @@ cursor.execute("""
         high NOT NULL,
         low NOT NULL,
         close NOT NULL,
-        adjusted_close NOT NULL,
         volume NOT NULL,
         FOREIGN KEY (stock_id) REFERENCES stock (id)
     )
