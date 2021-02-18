@@ -84,10 +84,10 @@ def strategy(request: Request, strategy_id):
     cursor=connection.cursor()
     cursor.execute("""
     SELECT id,name from strategy where id = ?
-    """, (srtategy_id,))
+    """, (strategy_id,))
     strategy = cursor.fetchone()
     cursor.execute("""
-    SELECT symbol,name FROM stock JOIN stock_strategy on stock_strategy.stock_id = stock.id
+    SELECT distinct symbol,name FROM stock JOIN stock_strategy on stock_strategy.stock_id = stock.id
     WHERE strategy_id= ?
     """,(strategy_id,))
     stocks = cursor.fetchall()
