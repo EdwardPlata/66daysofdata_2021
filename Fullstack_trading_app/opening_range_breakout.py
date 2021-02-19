@@ -5,6 +5,7 @@ from datetime import datetime as date
 # Let's set up notafications when things happen: IF trades are made with this indicator being kicked
 # off
 import smtplib, ssl
+# this is how we connect to SSL
 context = ssl.create_default_context()
 
 
@@ -39,9 +40,9 @@ start_minute_bar = f"{current_date} 09:30:00-4:00"
 end_minute_bar = f"{current_date} 09:45:00-4:00"
 #print(f"{date.today()}T13:30:00Z")
 after = (str(current_date)[:10])
-#orders = api.list_orders(status='all',limit = 500, after=f"{after}T13:30:00Z")
+orders = api.list_orders(status='open',limit = 500, after=f"{after}T13:30:00Z")
 #EMpty orders for testing purposes
-orders = api.list_orders()
+#orders = api.list_orders()
 
 existing_order_symbols = [order.symbol for order in orders]
 
@@ -72,7 +73,7 @@ for symbol in symbols:
             limit_price = after_opening_range_breakout.iloc[0]['close']
             print(limit_price)
 
-            print(f"placing order for {symbol} at {limit_price}, closed_above {opening_range_high} at {after_opening_range_breakout.iloc[0]}")
+            print(f"placing order for {symbol} at {limit_price}, closed_above {opening_range_high} \n\n {after_opening_range_breakout.iloc[0]}\n\n")
             messages.append(f"placing order for {symbol} at {limit_price}, closed_above {opening_range_high} at {after_opening_range_breakout.iloc[0]}")
             # We're gonna make a brackat order.
             api.submit_order(
@@ -93,8 +94,11 @@ for symbol in symbols:
         else:
             print(f"Already an order for {symbol}, skipping")
 print(messages)
-with smtplib.SMTP_SSL(config.EMAIL_ADDRESS, config.EMAIL_PORT, context=context) as server:
+with smtplib.SMTP_SSL(config.EMAIL_HOST, config.EMAIL_PORT, context=context) as server:
     server.login(config.EMAIL_ADDRESS, config.EMAIL_PASSWORD)
     # We'll be sending an email to myself
-    email_message = "\n".join(messages)
-    server.sentmail(config.EMAIL_ADDRESS,config.EMAIL_ADDRESS,email_message)
+    email_message = f"Subject: Trade Notafications for {current_date}\n\n"
+    email_message += "\n".join(messages)
+    server.sendmail(config.EMAIL_ADDRESS,config.EMAIL_ADDRESS,email_message)
+    server.sendmail(config.EMAIL_ADDRESS, config.SMS_EMAIL_ADDRESS, email_message)
+## Add phone notafication feature later.

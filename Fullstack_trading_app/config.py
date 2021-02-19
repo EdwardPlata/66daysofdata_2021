@@ -4,7 +4,7 @@ BASE_URL = 'https://paper-api.alpaca.markets'
 
 DB_FILE = '/User/anthonyplata/Google\ Drive/Projects/Fullstack_trading_app/app.db'
 
-EMAIL_ADDRESS = 'personalfundnotafications@gmail.com'
-EMAIL_PASSWORD = '*********'
+EMAIL_ADDRESS = 'PersonalFundNotafications@gmail.com'
+EMAIL_PASSWORD = 'MyPassword123'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT =465
