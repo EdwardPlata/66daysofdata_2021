@@ -3,3 +3,8 @@ SECRET_KEY = 'goptGCIpXs40d5tQtFFp6KO3MXFRnSTv46snc6C8'
 BASE_URL = 'https://paper-api.alpaca.markets'
 
 DB_FILE = '/User/anthonyplata/Google\ Drive/Projects/Fullstack_trading_app/app.db'
+
+EMAIL_ADDRESS = 'personalfundnotafications@gmail.com'
+EMAIL_PASSWORD = '*********'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT =465
