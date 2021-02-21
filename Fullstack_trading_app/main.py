@@ -38,7 +38,17 @@ def index(request:Request):
         cursor.execute(""" SELECT id,symbol,name FROM stock order by symbol """)
     rows=  cursor.fetchall()
     # This is in JSON format
-    return templates.TemplateResponse("index.html", {"request": request, "stocks": rows})
+    current_date=date.today().isoformat()
+    cursor.execute("""
+        SELECT symbol,rsi_14,sma20,sma50,close
+        FROM stock join stock_price on stock_price.stock_id = stock.id
+        where date = ?
+    """, (current_date,))
+    indicator_rows = cursor.fetchall()
+    indicator_values = {}
+    for row in indicator_rows:
+        indicator_values[row['symbol']] = row
+    return templates.TemplateResponse("index.html", {"request": request, "stocks": rows,"indicator_values":indicator_values})
     #return {"title":"Dashboard","stocks":rows}
 @app.get("/stock/{symbol}")
 def index(request:Request,symbol):

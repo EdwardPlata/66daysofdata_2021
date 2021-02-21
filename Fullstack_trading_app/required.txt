@@ -1,0 +1,7 @@
+sqlite3
+alpaca_trade_api
+numpy
+pandas
+tulipy
+smtplib
+ssl

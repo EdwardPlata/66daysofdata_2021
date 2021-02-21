@@ -24,7 +24,11 @@
         <tr>
             <th>Symbol</th>
             <th>Name</th>
-            <th class="right aligned">View</th>
+            <th>Price</th>
+            <th>RSI 14</th>
+            <th>SMA 20</th>
+            <th>SMA 50</th>
+            <th class="right aligned"></th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +36,15 @@
         <tr>
             <td>{{ stock.symbol }}</td>
             <td><a href = "stock/{{ stock.symbol }}">{{ stock.name }}</a></td>
+            {% if indicator_values[stock.symbol] %}
+            <td>{{ indicator_values[stock.symbol].close}}</td>
+            { % if indicator_values[stock.symbol].rsi_14 %}
+            <td>{{ indicator_values[stock.symbol].rsi_14 | round}}</td>
+            { % if indicator_values[stock.symbol].sma_20 %}
+            <td>{{ indicator_values[stock.symbol].sma_20 | round}}</td>
+            { %if  indicator_values[stock.symbol].sma_50 %}
+            <td>{{ indicator_values[stock.symbol].sma_50 | round}}</td>
+            {% endif %}
         </tr>
               {% endfor %}
       </tbody>

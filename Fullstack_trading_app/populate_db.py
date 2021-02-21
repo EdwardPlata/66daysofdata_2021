@@ -1,5 +1,5 @@
 import alpaca_trade_api as tradeapi
-import sqlite3,config.py
+import sqlite3,config
 connection=sqlite3.connect(config.DB_FILE)
 print("Successfully connected to Database")
 cursor = connection.cursor()
