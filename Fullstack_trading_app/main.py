@@ -24,16 +24,16 @@ def index(request:Request):
         SELECT symbol,name,stock_id,max(close),date
         from stock_price join stock on stock.id = stock_price.stock_id
         group by stock_id order by symbol
-        ) where date = ?
-        """, (date.today().isoformat(),))
+        ) where date = (SELECT max(Date) from stock_price)
+        """,)
     elif stock_filter == 'new_closing_lows':
         cursor.execute("""
         SELECT * FROM (
         SELECT symbol,name,stock_id,min(close),date
         from stock_price join stock on stock.id = stock_price.stock_id
         group by stock_id order by symbol
-        ) where date = ?
-        """, (date.today().isoformat(),))
+        ) where date = (SELECT max(Date) from stock_price)
+        """)
     else:
         cursor.execute(""" SELECT id,symbol,name FROM stock order by symbol """)
     rows=  cursor.fetchall()
@@ -42,8 +42,8 @@ def index(request:Request):
     cursor.execute("""
         SELECT symbol,rsi_14,sma20,sma50,close
         FROM stock join stock_price on stock_price.stock_id = stock.id
-        where date = ?
-    """, (current_date,))
+        where date = (SELECT max(Date) from stock_price)
+    """)
     indicator_rows = cursor.fetchall()
     indicator_values = {}
     for row in indicator_rows:
