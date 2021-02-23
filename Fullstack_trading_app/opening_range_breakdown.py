@@ -17,7 +17,7 @@ connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
 
 cursor.execute("""
-    SELECT id from strategy where name = 'opening_range_breakout'
+    SELECT id from strategy where name = 'opening_range_breakdown'
 """)
 # This is just to get the ID of the strategy to query
 strategy_id = cursor.fetchone()['id']
@@ -70,32 +70,35 @@ for symbol in symbols:
 
     print(after_opening_range_bars)
 
-    after_opening_range_breakout = after_opening_range_bars[after_opening_range_bars['close']> opening_range_high]
+    after_opening_range_breakdown = after_opening_range_bars[after_opening_range_bars['close']< opening_range_low]
 
-    if not after_opening_range_breakout.empty:
+    if not after_opening_range_breakdown.empty:
         if symbol not in existing_order_symbols:
-            print(after_opening_range_breakout)
-            limit_price = after_opening_range_breakout.iloc[0]['close']
+            print(after_opening_range_breakdown)
+            limit_price = after_opening_range_breakdown.iloc[0]['close']
             print(limit_price)
 
-            print(f"placing order for {symbol} at {limit_price}, closed_above {opening_range_high} \n\n {after_opening_range_breakout.iloc[0]}\n\n")
-            messages.append(f"placing order for {symbol} at {limit_price}, closed_above {opening_range_high} at {after_opening_range_breakout.iloc[0]}")
+            print(f"placing short for {symbol} at {limit_price}, closed_below {opening_range_high} \n\n {after_opening_range_breakdown.iloc[0]}\n\n")
+            messages.append(f"placing short for {symbol} at {limit_price}, closed_below {opening_range_high} at {after_opening_range_breakdown.iloc[0]}")
             # We're gonna make a brackat order.
-            api.submit_order(
-                symbol=symbol,
-                side='buy',
-                type='limit',
-                qty='100',
-                time_in_force='day',
-                limit_price = limit_price,
-                order_class='bracket',
-                take_profit=dict(
-                    limit_price=limit_price + opening_range,
-                ),
-                stop_loss=dict(
-                    stop_price=limit_price - opening_range,
+            try:
+                api.submit_order(
+                    symbol=symbol,
+                    side='sell',
+                    type='limit',
+                    qty='100',
+                    time_in_force='day',
+                    limit_price = limit_price,
+                    order_class='bracket',
+                    take_profit=dict(
+                        limit_price=limit_price - opening_range,
+                    ),
+                    stop_loss=dict(
+                        stop_price=limit_price + opening_range,
+                    )
                 )
-            )
+            except Exception as e:
+                print(f"could not submit order {e}")
         else:
             print(f"Already an order for {symbol}, skipping")
 print(messages)
@@ -105,5 +108,5 @@ with smtplib.SMTP_SSL(config.EMAIL_HOST, config.EMAIL_PORT, context=context) as 
     email_message = f"Subject: Trade Notafications for {current_date}\n\n"
     email_message += "\n".join(messages)
     server.sendmail(config.EMAIL_ADDRESS,config.EMAIL_ADDRESS,email_message)
-    server.sendmail(config.EMAIL_ADDRESS, config.SMS_EMAIL_ADDRESS, email_message)
+    #server.sendmail(config.EMAIL_ADDRESS, config.SMS_EMAIL_ADDRESS, email_message)
 ## Add phone notafication feature later.
